@@ -8,7 +8,12 @@ import sys
 startCell = None
 totalCount = 0
 deathCount = 0
-threshold = .05
+threshold = .95
+
+alphaArray = [.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.0]
+gammaArray = [0,.1,.2,3,.4,.5,.6,.7,.8,.9,1.0,.9,.9,.9,.9,.9,.9,.9,.9,.9,.9]
+epsilonArray = [.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1]
+alphaGammaArrayIndex = 0
 
 class Cell(cellular.Cell):
     def __init__(self):
@@ -76,23 +81,23 @@ class Agent(cellular.Agent):
             deathCount = deathCount + 1
             totalCount = totalCount + 1
             print "deaths: %d total: %d" % (deathCount, totalCount)
-            current = (float)(deathCount / totalCount)
-            if(current <= threshold):
-                print "THRESHOLD REACHED"
             return cliffReward
+
         elif here.goal:
             self.score += 1
             global totalCount
             global deathCount
+            global alphaGammaArrayIndex
             totalCount = totalCount + 1
             print "deaths: %d total: %d" % (deathCount, totalCount)
             current = (float)(deathCount / totalCount)
             if(current <= threshold):
+                alphaGammaArrayIndex = alphaGammaArrayIndex + 1
                 print "THRESHOLD REACHED"
+                return
             return goalReward
+
         else:
-            #totalCount = totalCount + 1
-            #print "normalReward"
             return normalReward
 
 
@@ -102,21 +107,28 @@ goalReward = 0
 directions = 4
 world = cellular.World(Cell, directions=directions, filename='cliff.txt')
 
-if startCell is None:
-    print "You must indicate where the agent starts by putting a 'S' in the map file"
-    sys.exit()
-agent = Agent()
-world.addAgent(agent, cell=startCell)
+def begin(eps, alph, gamm):
+    if startCell is None:
+        print "You must indicate where the agent starts by putting a 'S' in the map file"
+        sys.exit()
+    agent = Agent()
+    world.addAgent(agent, cell=startCell)
 
-pretraining = 0
-for i in range(pretraining):
-    if i % 1000 == 0:
-        print i, agent.score
-        agent.score = 0
-    world.update()
+    pretraining = 0
+    for i in range(pretraining):
+        if i % 1000 == 0:
+            print i, agent.score
+            agent.score = 0
+        world.update()
 
-world.display.activate(size=30)
-world.display.delay = 1
+    world.display.activate(size=30)
+    world.display.delay = 1
 
-while 1:
-    world.update()
+    while 1:
+        world.update()
+
+while True:
+    print "fucked here"
+    begin(epsilonArray[alphaGammaArrayIndex], alphaArray[alphaGammaArrayIndex], gammaArray[alphaGammaArrayIndex])
+    print "fucked there"
+
