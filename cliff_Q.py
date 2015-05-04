@@ -85,17 +85,20 @@ world = cellular.World(Cell, directions=directions, filename='cliff.txt')
 if startCell is None:
     print "You must indicate where the agent starts by putting a 'S' in the map file"
     sys.exit()
-agent = Agent()
-world.addAgent(agent, cell=startCell)
+def main():
+    agent = Agent()
+    world.addAgent(agent, cell=startCell)
 
-pretraining = 0
-for i in range(pretraining):
-    if i % 1000 == 0:
-        print i, agent.score
-        agent.score = 0
-    world.update()
+    pretraining = 0
+    for i in range(pretraining):
+        if i % 1000 == 0:
+            print i, agent.score
+            agent.score = 0
+        world.update()
 
-world.display.activate(size=30)
-world.display.delay = 1
-while 1:
-    world.update()
+    world.display.activate(size=30)
+    world.display.delay = 1
+    while 1:
+        world.update()
+
+main()
