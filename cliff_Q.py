@@ -5,7 +5,7 @@ import sys
 
 startCell = None
 
-#we need to make a call to agent with certain parameters
+
 class Cell(cellular.Cell):
     def __init__(self):
         self.cliff = False
@@ -69,11 +69,10 @@ class Agent(cellular.Agent):
             return cliffReward
         elif here.goal:
             self.score += 1
-            print self.age
-            #return goalReward
-            sys.exit("found the cheese")
+            return goalReward
         else:
             return normalReward
+
 
 normalReward = -1
 cliffReward = -100
@@ -85,20 +84,17 @@ world = cellular.World(Cell, directions=directions, filename='cliff.txt')
 if startCell is None:
     print "You must indicate where the agent starts by putting a 'S' in the map file"
     sys.exit()
-def main(eps, alph, gamm):
-    agent = Agent(eps, alph, gamm)
-    world.addAgent(agent, cell=startCell)
+agent = Agent()
+world.addAgent(agent, cell=startCell)
 
-    pretraining = 0
-    for i in range(pretraining):
-        if i % 1000 == 0:
-            print i, agent.score
-            agent.score = 0
-        world.update()
+pretraining = 0
+for i in range(pretraining):
+    if i % 1000 == 0:
+        print i, agent.score
+        agent.score = 0
+    world.update()
 
-    world.display.activate(size=30)
-    world.display.delay = 1
-    while 1:
-        world.update()
-
-main()
+world.display.activate(size=30)
+world.display.delay = 1
+while 1:
+    world.update()
