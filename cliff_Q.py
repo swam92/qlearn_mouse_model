@@ -15,6 +15,12 @@ gammaArray = [0,.1,.2,3,.4,.5,.6,.7,.8,.9,1.0,.9,.9,.9,.9,.9,.9,.9,.9,.9,.9]
 epsilonArray = [.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1]
 alphaGammaArrayIndex = 0
 
+############################
+finalRatio = []
+finalAge = []
+index = 0
+############################
+
 class Cell(cellular.Cell):
     def __init__(self):
         self.cliff = False
@@ -93,7 +99,10 @@ class Agent(cellular.Agent):
             current = (float)(deathCount / totalCount)
             if(current <= threshold):
                 alphaGammaArrayIndex = alphaGammaArrayIndex + 1
-                print "THRESHOLD REACHED"
+                ######################################
+                index = index + 1
+                finalRatio.append(current)
+                ######################################
                 return
             return goalReward
 
@@ -123,12 +132,17 @@ def begin(eps, alph, gamm):
 
     world.display.activate(size=30)
     world.display.delay = 1
-
+    age = 0
     while 1:
+        ######################################
+        if age == 0:
+            finalAge.append(age)
+        else:
+            finalAge[index] = age
+        age = age + 1
+        #######################################
         world.update()
 
 while True:
-    print "fucked here"
     begin(epsilonArray[alphaGammaArrayIndex], alphaArray[alphaGammaArrayIndex], gammaArray[alphaGammaArrayIndex])
-    print "fucked there"
 
