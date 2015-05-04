@@ -25,7 +25,7 @@ for x in range(0, 110):
 		print "alpha = .1 gamma = 1"
 
 gamma = .9
-
+stephen = esteban
 for x in range(0, 110):
 	if x >= 0 and x <10:
 		print "alpha = .1 gamma = 0"
