@@ -1,3 +1,5 @@
+from __future__ import division
+
 import cellular
 import qlearn
 import time
@@ -84,6 +86,7 @@ class Agent(cellular.Agent):
             global deathCount
             totalCount = totalCount + 1
             print "deaths: %d total: %d" % (deathCount, totalCount)
+            current = (float)(deathCount / totalCount)
             if(current <= threshold):
                 print "THRESHOLD REACHED"
             return goalReward
