@@ -4,7 +4,9 @@ import time
 import sys
 
 startCell = None
-
+totalCount = 0
+deathCount = 0
+threshold = .05
 
 class Cell(cellular.Cell):
     def __init__(self):
@@ -65,19 +67,35 @@ class Agent(cellular.Agent):
 
     def calcReward(self):
         here = self.cell
+
         if here.cliff:
+            global deathCount
+            global totalCount
+            deathCount = deathCount + 1
+            totalCount = totalCount + 1
+            print "deaths: %d total: %d" % (deathCount, totalCount)
+            current = (float)(deathCount / totalCount)
+            if(current <= threshold):
+                print "THRESHOLD REACHED"
             return cliffReward
         elif here.goal:
             self.score += 1
+            global totalCount
+            global deathCount
+            totalCount = totalCount + 1
+            print "deaths: %d total: %d" % (deathCount, totalCount)
+            if(current <= threshold):
+                print "THRESHOLD REACHED"
             return goalReward
         else:
+            #totalCount = totalCount + 1
+            #print "normalReward"
             return normalReward
 
 
 normalReward = -1
 cliffReward = -100
 goalReward = 0
-
 directions = 4
 world = cellular.World(Cell, directions=directions, filename='cliff.txt')
 
@@ -96,5 +114,6 @@ for i in range(pretraining):
 
 world.display.activate(size=30)
 world.display.delay = 1
+
 while 1:
     world.update()
