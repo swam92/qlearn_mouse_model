@@ -79,7 +79,7 @@ class Agent(cellular.Agent):
             print "deaths: %d total: %d" % (deathCount, totalCount)
             current = (float)(deathCount / totalCount)
             print ("current: %f") % current
-            if totalCount == 5:
+            if totalCount == 100:
                 flag = True
                 print "TOTAL IS 100"
                 return
@@ -94,7 +94,7 @@ class Agent(cellular.Agent):
             print "deaths: %d total: %d" % (deathCount, totalCount)
             current = (float)(deathCount / totalCount)
             print ("current: %f") % current
-            if totalCount == 5:
+            if totalCount == 100:
                 flag = True
                 print "TOTAL is 100"
                 return
