@@ -33,6 +33,8 @@ for i in xrange(len(alphas)):
         
         print("alpha = {}, gamma = {}".format(alpha, gamma))    
         success[i,j] = simulate(alpha, gamma)
+        print ("for alpha = %d gamma = %d success[i,j] = %d" % (i, j, success[i,j]))
+
 
 np.savetxt('data.txt', success)
 

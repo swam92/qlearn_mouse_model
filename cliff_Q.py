@@ -39,9 +39,9 @@ class Cell(cellular.Cell):
 
 
 class Agent(cellular.Agent):
-    def __init__(self):
+    def __init__(self, eps, alph, gamm):
         self.ai = qlearn.QLearn(
-            actions=range(directions), epsilon=0.1, alpha=0.1, gamma=0.9)
+            actions=range(directions), epsilon=eps, alpha=alph, gamma=gamm)
         self.lastAction = None
         self.score = 0
 
@@ -127,7 +127,7 @@ def begin(eps1, alpha1, gamma1):
     flag = False
     deathCount = 0
     totalCount = 0
-    agent = Agent()
+    agent = Agent(eps1, alpha1, gamma1)
     world.addAgent(agent, cell=startCell)
 
     pretraining = 0
