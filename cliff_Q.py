@@ -8,18 +8,7 @@ import sys
 startCell = None
 totalCount = 0
 deathCount = 0
-threshold = .95
-
-alphaArray = [.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.0]
-gammaArray = [0,.1,.2,3,.4,.5,.6,.7,.8,.9,1.0,.9,.9,.9,.9,.9,.9,.9,.9,.9,.9]
-epsilonArray = [.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1,.1]
-alphaGammaArrayIndex = 0
-
-############################
-finalRatio = []
-finalAge = []
-index = 0
-############################
+flag = False
 
 class Cell(cellular.Cell):
     def __init__(self):
@@ -84,29 +73,35 @@ class Agent(cellular.Agent):
         if here.cliff:
             global deathCount
             global totalCount
+            global flag 
             deathCount = deathCount + 1
             totalCount = totalCount + 1
             print "deaths: %d total: %d" % (deathCount, totalCount)
-            return cliffReward
+            current = (float)(deathCount / totalCount)
+            print ("current: %f") % current
+            if totalCount == 5:
+                flag = True
+                print "TOTAL IS 100"
+                return
 
+            return cliffReward
         elif here.goal:
             self.score += 1
             global totalCount
             global deathCount
-            global alphaGammaArrayIndex
+            global flag
             totalCount = totalCount + 1
             print "deaths: %d total: %d" % (deathCount, totalCount)
             current = (float)(deathCount / totalCount)
-            if(current <= threshold):
-                alphaGammaArrayIndex = alphaGammaArrayIndex + 1
-                ######################################
-                index = index + 1
-                finalRatio.append(current)
-                ######################################
+            print ("current: %f") % current
+            if totalCount == 5:
+                flag = True
+                print "TOTAL is 100"
                 return
             return goalReward
-
         else:
+            #totalCount = totalCount + 1
+            #print "normalReward"
             return normalReward
 
 
@@ -116,10 +111,22 @@ goalReward = 0
 directions = 4
 world = cellular.World(Cell, directions=directions, filename='cliff.txt')
 
-def begin(eps, alph, gamm):
+#wrap this in a function that looks something like this
+#def start(epsilon, gamma)
+def begin(eps1, alpha1, gamma1):
+    #begin needs to take two parameters being alpha and gamma
     if startCell is None:
         print "You must indicate where the agent starts by putting a 'S' in the map file"
         sys.exit()
+        #agent needs to take two parameters alpha and gamma when it is 
+        #initialized here, and above, in line 45
+    global flag
+    global deathCount
+    global totalCount
+    global world
+    flag = False
+    deathCount = 0
+    totalCount = 0
     agent = Agent()
     world.addAgent(agent, cell=startCell)
 
@@ -129,20 +136,15 @@ def begin(eps, alph, gamm):
             print i, agent.score
             agent.score = 0
         world.update()
-
+    
     world.display.activate(size=30)
     world.display.delay = 1
-    age = 0
+    
     while 1:
-        ######################################
-        if age == 0:
-            finalAge.append(age)
-        else:
-            finalAge[index] = age
-        age = age + 1
-        #######################################
+        if flag == True:
+            print "Returning to simulate() in rl.py"
+            world.reset()
+            world = cellular.World(Cell, directions=directions, filename='cliff.txt')
+            #this is where the ratio gets returned to simulate
+            return (deathCount / totalCount)
         world.update()
-
-while True:
-    begin(epsilonArray[alphaGammaArrayIndex], alphaArray[alphaGammaArrayIndex], gammaArray[alphaGammaArrayIndex])
-

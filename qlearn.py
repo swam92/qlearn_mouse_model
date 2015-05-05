@@ -1,8 +1,8 @@
 import random
-
+import sys
 
 class QLearn:
-    def __init__(self, actions, epsilon=0.1, alpha=0.2, gamma=0.9):
+    def __init__(self, actions, epsilon=0.1, alpha=0, gamma=0.9):
         self.q = {}
 
         self.epsilon = epsilon
@@ -39,7 +39,10 @@ class QLearn:
 
     def learn(self, state1, action1, reward, state2):
         maxqnew = max([self.getQ(state2, a) for a in self.actions])
-        self.learnQ(state1, action1, reward, reward + self.gamma*maxqnew)
+        if reward is not None:
+            self.learnQ(state1, action1, reward, reward + self.gamma*maxqnew)
+        else:
+            return
 
     def printQ(self):
         keys = self.q.keys()

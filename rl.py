@@ -24,7 +24,6 @@ success = np.zeros((len(alphas), len(gammas)))
 def simulate(alpha, gamma):
 	x = 0
 	x = cliff_Q.begin(.1, alpha, gamma)
-	sys.exit()
 	return x
 
 for i in xrange(len(alphas)):
